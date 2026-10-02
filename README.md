@@ -1,235 +1,310 @@
-Dream 11 Fantasy Team Predictor
+# Dream 11 Fantasy Team Predictor
 
-A Python-based fantasy cricket player prediction project that uses historical player performance data and machine learning to estimate fantasy points.
+A Python-based machine learning project that predicts fantasy cricket points for players using their historical batting, bowling, and fielding performances.
 
-The project collects batting, bowling, and fielding statistics from ESPNcricinfo, predicts recent performance using an XGBoost model, calculates fantasy points, and generates a 15-player squad.
+The project uses XGBoost to predict player performance and converts those predictions into fantasy points. Based on the predicted points, it generates a 15-player fantasy team.
 
-Features
+## Features
 
-Uses historical player statistics.
+- Fetches historical player statistics from ESPNcricinfo
+- Supports batsmen, bowlers, wicketkeepers, and all-rounders
+- Uses XGBoost regression for player performance prediction
+- Uses previous performances as lag features
+- Gives higher importance to recent performances
+- Calculates batting, bowling, and fielding fantasy points
+- Ranks players based on predicted fantasy points
+- Generates a 15-player fantasy team
+- Attempts to maintain different player roles in the final team
+- Assigns Captain and Vice-Captain
+- Exports the final team to a CSV file
 
-Supports batting, bowling, wicket-keeping, and all-rounder players.
+## How It Works
 
-Predicts player performance using XGBoost.
+The project follows this workflow:
 
-Calculates fantasy points from predicted performance.
+    Excel Player Data
+           |
+           v
+    Player Selection
+           |
+           v
+    Fetch Historical Statistics
+           |
+           v
+    Data Cleaning
+           |
+           v
+    Create Lag Features
+           |
+           v
+    XGBoost Prediction
+           |
+           v
+    Fantasy Point Calculation
+           |
+           v
+    Player Ranking
+           |
+           v
+    15-Player Team Selection
+           |
+           v
+    CSV Output
 
-Gives extra importance to recent matches.
+## Machine Learning Approach
 
-Considers batting, bowling, and fielding points.
+The project uses XGBoost Regression to predict future player performance.
 
-Automatically selects a 15-player squad.
+Historical player statistics are converted into lag features. The model uses previous performances to predict the next performance.
 
-Tries to include different player roles in the final squad.
+For example, with 5 lag values:
 
-Saves the final team as a CSV file.
+    Previous Performance 1
+    Previous Performance 2
+    Previous Performance 3
+    Previous Performance 4
+    Previous Performance 5
+              |
+              v
+        XGBoost Model
+              |
+              v
+     Predicted Performance
 
-How It Works
+Recent performances are given higher weights so that newer performances have more influence on the prediction.
 
-The project follows these main steps:
+### Model Parameters
 
-Reads the list of players and their roles from an Excel file.
+    Objective       : reg:squarederror
+    Max Depth       : 5
+    Learning Rate   : 0.1
+    Boosting Rounds : 100
 
-Gets player statistics from ESPNcricinfo.
+## Fantasy Point Calculation
 
-Cleans and converts the statistics into numerical data.
+The project calculates fantasy points from three main areas.
 
-Creates lag features from previous performances.
-
-Trains an XGBoost regression model for each statistical category.
-
-Predicts the player's next performance.
-
-Converts the prediction into fantasy points.
-
-Adds fielding, batting, and bowling points where applicable.
-
-Sorts players based on predicted fantasy points.
-
-Selects a final 15-player team.
-
-Saves the result to a CSV file.
-
-Machine Learning
-
-The project uses XGBoost Regression.
-
-Historical performances are converted into lag features. For example, with 5 lags, the model uses the previous five observations to predict the next value.
-
-Recent matches are also given higher weights so that newer performances have more influence on the prediction.
-
-Fantasy Point Calculation
-
-The project calculates points for three main areas:
-
-Batting
+### Batting Points
 
 Batting points consider:
 
-Runs
+- Runs
+- Fours
+- Sixes
+- Run milestones
+- Strike rate
 
-Boundaries
-
-Sixes
-
-Milestones
-
-Strike rate
-
-Bowling
+### Bowling Points
 
 Bowling points consider:
 
-Runs conceded
+- Runs conceded
+- Wickets
+- Economy rate
+- Wicket milestones
 
-Wickets
+### Fielding Points
 
-Economy rate
+Fielding points are calculated using the predicted number of dismissals.
 
-Wicket milestones
+## Player Roles
 
-Fielding
+The project supports four player types:
 
-Fielding points are calculated using dismissals.
+| Player Type | Description |
+|-------------|-------------|
+| BAT         | Batsman     |
+| BOWL        | Bowler      |
+| WK          | Wicketkeeper|
+| ALL         | All-rounder |
 
-Project Structure
-fantasy-cricket-predictor/
-│
-├── src/
-│   └── predictor.py
-│
-├── data/
-│   └── .gitkeep
-│
-├── .gitignore
-├── requirements.txt
-└── README.md
+The team selection logic also attempts to ensure that different player roles are represented in the final squad.
 
-Requirements
+## Project Structure
 
-Python 3.9+
+    fantasy-cricket-predictor/
+    |
+    ├── src/
+    │   └── predictor.py
+    |
+    ├── data/
+    │   └── .gitkeep
+    |
+    ├── .gitignore
+    ├── requirements.txt
+    └── README.md
 
-pandas
+## Requirements
 
-NumPy
+- Python 3.9+
+- pandas
+- NumPy
+- Requests
+- BeautifulSoup4
+- XGBoost
+- openpyxl
 
-Requests
+## Installation
 
-BeautifulSoup4
+### 1. Clone the Repository
 
-XGBoost
+    git clone https://github.com/YOUR_USERNAME/fantasy-cricket-predictor.git
+    cd fantasy-cricket-predictor
 
-openpyxl
+### 2. Create a Virtual Environment
 
-Installation
+#### Windows
 
-Clone the repository:
+    python -m venv venv
+    venv\Scripts\activate
 
-git clone https://github.com/YOUR_USERNAME/fantasy-cricket-predictor.git
-cd fantasy-cricket-predictor
+#### Linux / macOS
 
+    python3 -m venv venv
+    source venv/bin/activate
 
-Create a virtual environment:
+### 3. Install Dependencies
 
-Windows
-python -m venv venv
-venv\Scripts\activate
+    pip install -r requirements.txt
 
-Linux / macOS
-python3 -m venv venv
-source venv/bin/activate
+## Input Data
 
+The project expects an Excel file named:
 
-Install the required packages:
+    SquadPlayerNames_IndianT20League.xlsx
 
-pip install -r requirements.txt
+The workbook should contain sheets based on match numbers:
 
-Input Data
+    Match_1
+    Match_2
+    Match_3
+    ...
 
-The program expects an Excel file named:
+Each sheet should contain player information such as:
 
-SquadPlayerNames_IndianT20League.xlsx
+| Column      | Description                  |
+|-------------|------------------------------|
+| Player Name | Name of the player           |
+| Player Type | BAT, BOWL, WK, or ALL        |
+| Team        | Player's team                |
+| IsPlaying   | Player's playing status      |
 
+### Example
 
-The workbook should contain sheets in the following format:
+| Player Name | Player Type | Team   | IsPlaying |
+|-------------|-------------|--------|-----------|
+| Player 1    | BAT         | Team A | PLAYING   |
+| Player 2    | BOWL        | Team B | PLAYING   |
+| Player 3    | ALL         | Team A | PLAYING   |
 
-Match_1
-Match_2
-Match_3
-...
+## Running the Project
 
+The match number is passed as a command-line argument.
 
-Each sheet should contain player information including fields such as:
+For example, to process Match_1:
 
-Player Name
+    python src/predictor.py 1
 
-Player Type
+For Match_2:
 
-Team
+    python src/predictor.py 2
 
-IsPlaying
+The program reads the corresponding match sheet from the Excel workbook.
 
-The Excel file is intentionally excluded from Git using .gitignore.
+For example:
 
-Running the Project
+    python src/predictor.py 1
 
-Run the program by providing the match number:
+will read:
 
-python src/predictor.py 1
+    Match_1
 
+## Output
 
-For another match:
+The program generates:
 
-python src/predictor.py 2
-
-
-The program will generate:
-
-AI_Explorers_output.csv
-
+    AI_Explorers_output.csv
 
 The output contains:
 
-Player Name	Team	C/VC
-Player 1	Team A	C
-Player 2	Team B	VC
-Player 3	Team A	NA
-Important Notes
+| Player Name | Team   | C/VC |
+|-------------|--------|------|
+| Player 1    | Team A | C    |
+| Player 2    | Team B | VC   |
+| Player 3    | Team A | NA   |
 
-This project is intended as a machine learning and data analysis project.
+Where:
 
-The predictions are based on historical performance and should not be treated as guaranteed future results.
+- C = Captain
+- VC = Vice-Captain
+- NA = No Captain/Vice-Captain assignment
 
-The project depends on data being available from ESPNcricinfo. Changes to the website's HTML structure may require changes to the scraping code.
+## Data Source
 
-Future Improvements
+Historical player statistics are collected from ESPNcricinfo.
 
-Some possible improvements are:
+The project uses player IDs to retrieve individual batting, bowling, and fielding statistics.
 
-Move the code into separate modules.
+The project depends on the current structure of ESPNcricinfo statistics pages. If the website structure changes, the scraping code may need to be updated.
 
-Add proper logging and error handling.
+## Important Notes
 
-Avoid training a new model for every prediction.
+### Excel Input File
 
-Add more player and match features.
+The Excel input file is excluded from the Git repository using `.gitignore`.
 
-Include venue and opposition statistics.
+This keeps the repository lightweight and prevents local input data from being accidentally uploaded.
 
-Include recent team/player form.
+### Generated CSV
 
-Add automated data collection.
+Generated CSV files are also excluded from Git using:
 
-Add model evaluation metrics.
+    *.csv
 
-Compare XGBoost with other machine learning models.
+### Internet Connection
 
-Create a web interface for predictions.
+An active internet connection is required because the project fetches player statistics from ESPNcricinfo.
 
-Add unit tests.
+## Current Limitations
 
-Use configuration files instead of hard-coded values.
+- The project is currently implemented mainly in a single Python file.
+- The model is trained separately for each prediction.
+- Predictions are primarily based on historical player statistics.
+- Venue-specific performance is not currently considered.
+- Opposition-specific performance is not currently considered.
+- Error handling for failed web requests can be improved.
+- The scraper depends on the structure of ESPNcricinfo pages.
+- Model evaluation metrics have not yet been implemented.
 
-Disclaimer
+## Future Improvements
 
-This project is created for educational and experimental purposes. Predictions are estimates based on historical data and machine learning and are not guaranteed to be accurate.
+- Split the project into multiple modules
+- Add proper exception handling
+- Add logging
+- Add unit tests
+- Add model evaluation metrics
+- Include venue statistics
+- Include opposition-specific statistics
+- Include recent player form
+- Include pitch and match conditions
+- Experiment with different machine learning models
+- Improve team selection constraints
+- Automate data collection
+- Build a web interface for predictions
+- Move configuration values out of the source code
+
+## Disclaimer
+
+This project is created for educational and experimental purposes.
+
+The predictions are based on historical player performances and machine learning. They are estimates and are not guaranteed to accurately predict future player performance.
+
+## Author
+
+Your Name
+
+GitHub: https://github.com/YOUR_USERNAME
+
+## License
+
+This project is intended for educational and personal use.
