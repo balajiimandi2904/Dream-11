@@ -295,6 +295,5 @@ An active internet connection is required because the project fetches player sta
 
 ## Author
 
-Your Name
-
-GitHub: https://github.com/balajiimandi2904
+BALAJI IMANDI
+https://github.com/balajiimandi2904
