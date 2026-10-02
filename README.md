@@ -293,18 +293,8 @@ An active internet connection is required because the project fetches player sta
 - Build a web interface for predictions
 - Move configuration values out of the source code
 
-## Disclaimer
-
-This project is created for educational and experimental purposes.
-
-The predictions are based on historical player performances and machine learning. They are estimates and are not guaranteed to accurately predict future player performance.
-
 ## Author
 
 Your Name
 
-GitHub: https://github.com/YOUR_USERNAME
-
-## License
-
-This project is intended for educational and personal use.
+GitHub: https://github.com/balajiimandi2904
