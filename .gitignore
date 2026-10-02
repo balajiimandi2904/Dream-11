@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environment
+venv/
+.venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+
+# Data/output files
+*.xlsx
+*.csv
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Secrets
+.env
